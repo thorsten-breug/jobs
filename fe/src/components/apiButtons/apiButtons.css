@@ -1,0 +1,25 @@
+.apiButtons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.apiButtons > button {
+    width: 110px;
+    margin: 5px;
+}
+
+.apiButtons > button:nth-child(1):not(:disabled) {
+    color: white;
+    background-color: green;
+}
+
+.apiButtons > button:nth-child(2):not(:disabled) {
+    color: black;
+    background-color: gold;
+}
+
+.apiButtons > button:nth-child(3):not(:disabled) {
+    color: white;
+    background-color: red;
+}

@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16.9
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=...
+      - POSTGRES_PASSWORD=...
+      - POSTGRES_DB=jobs
+    networks:
+      - jobs-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  jobs:
+    image: jobs-backend:latest
+    restart: always # gives time to create user role and table 'jobs' in the postgres docker container with psql if needed
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/jobs
+      - DATABASE_USER=...
+      - DATABASE_PASSWORD=...
+    networks:
+      - jobs-network
+networks:
+  jobs-network:
+    driver: bridge
+volumes:
+  postgres-data:
+    driver: local
