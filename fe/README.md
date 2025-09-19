@@ -11,6 +11,8 @@ Currently, two official plugins are available:
 
 - `VITE_API_URL` must be set as the Backend URI (http://localhost:8080).
 
+> You might get CORS errors in Your Browser's Development Console while the Browser detects calls from your local Port 5173 to Port 8080 for the Backend REST API. Thus the Backend should be started with Profile `dev` being active in order to return the appropriate CORS Headers for local development (see Bean `corsConfigurer()` in Class [JobsApplication](../be/src/main/java/com/example/jobs/JobsApplication.java)).
+
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:

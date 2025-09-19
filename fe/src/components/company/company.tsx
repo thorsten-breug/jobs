@@ -79,7 +79,9 @@ export default () => {
         });
     }
 
-    useEffect(() => dispatch(getCompanies()), []);
+    useEffect(() => {
+        dispatch(getCompanies());
+    }, []);
 
     useEffect(() => {
         if (error) {
