@@ -1,13 +1,13 @@
 import type { Company } from "../types/company"
 import { errorMessage } from './error'
 
-export const getCompanies = (): Promise<Company[]> => {
-    return fetch(`${import.meta.env.VITE_API_URL}/company`)
+export const getCompanies = (page: number, size: number): Promise<Response> => {
+    return fetch(`${import.meta.env.VITE_API_URL}/company?page=${page}&size=${size}`)
         .then(async response => {
             if (!response.ok) {
                 throw new Error(await errorMessage(response));
             }
-            return response.json();
+            return response;
         });
 }
 

@@ -9,14 +9,16 @@ export const enum AppAction {
     COMPANY_DELETE = 'COMPANY_DELETE',
 }
 
-export const getCompanies = () => (dispatch: (action: any) => void): Promise<void | Company[]> => {
-    return apiCompany.getCompanies()
-        .then((companies) =>  {
-            dispatch({
-                type: AppAction.COMPANY_INIT,
-                companies,
-            })
-            return companies;
+export const getCompanies = (page: number, size: number) => (dispatch: (action: any) => void): Promise<void | number> => {
+    return apiCompany.getCompanies(page, size)
+        .then((response) =>  {
+            return response.json().then((companies: Company[]) => {
+                dispatch({
+                    type: AppAction.COMPANY_INIT,
+                    companies,
+                })
+                return +(response.headers.get('x-total-count') || 0);
+            });
         })
         .catch((error: Error) => {
             dispatch({
