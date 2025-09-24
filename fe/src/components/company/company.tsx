@@ -132,7 +132,10 @@ export default () => {
                         <select 
                             name="pagination-size"
                             value={elementsPerPage.toString()}
-                            onChange={(event) => setElementsPerPage(+event.target.value)}
+                            onChange={(event) => {
+                                setCurrentPage(0);
+                                setElementsPerPage(+event.target.value);
+                            }}
                         >
                             <option value={10}>10</option>
                             <option value={50}>50</option>
