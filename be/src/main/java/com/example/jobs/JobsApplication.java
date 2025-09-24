@@ -18,9 +18,10 @@ public class JobsApplication {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*")
-                        .allowedHeaders("*");
+                    .allowedOrigins("*")
+                    .allowedMethods("*")
+                    .allowedHeaders("*")
+                    .exposedHeaders("*");
             }
         };
     }

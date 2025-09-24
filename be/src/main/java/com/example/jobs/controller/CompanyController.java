@@ -6,8 +6,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +31,12 @@ public class CompanyController {
     }
 
     @GetMapping()
-    @Operation(summary = "List Companies")
-    public List<Company> getCompanies() {
-        return this.service.findAll();
+    @Operation(summary = "List Companies sorted by name with Pagination")
+    public List<Company> getCompanies(
+        @Parameter(description = "Pagination Page Offset") @RequestParam(name = "page", defaultValue = "0") Integer page, @Parameter(description = "Pagination Page Size") @RequestParam(name = "size", defaultValue = "50") @Min(1) Integer size, HttpServletResponse response) {
+        Page<Company> p = this.service.findAllByPaginationSortedByName(page, size);
+        response.setHeader("x-total-count", Long.toString(p.getTotalElements()));
+        return p.getContent();
     }
 
     @GetMapping("{id}")

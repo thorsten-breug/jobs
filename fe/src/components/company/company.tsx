@@ -1,3 +1,4 @@
+import Pagination from "react-paginate"
 import { useContext, useEffect, useState } from "react"
 import { AppContext, useDispatch, type AppState } from "../../store/context"
 import type { Company } from "../../types/company"
@@ -56,6 +57,9 @@ export default () => {
     const dispatch = useDispatch();
     const {state: {companies, error}, dispatch: disp} = useContext(AppContext)
     const [selection, setSelection] = useState(-1)
+    const [pageCount, setPageCount] = useState(0); // Total number of pages
+    const [currentPage, setCurrentPage] = useState(0); // Current page
+    const [elementsPerPage, setElementsPerPage] = useState(50);
 
     const getSelectedItem = () => companies.find(item => item.id === selection);
     const handleModify = (mode: ModifyMode, form: any): Promise<boolean> => {
@@ -80,8 +84,10 @@ export default () => {
     }
 
     useEffect(() => {
-        dispatch(getCompanies());
-    }, []);
+        dispatch(getCompanies(currentPage, elementsPerPage)).then((count: number) => {
+            setPageCount(Math.ceil(count / elementsPerPage));
+        });
+    }, [elementsPerPage, currentPage]);
 
     useEffect(() => {
         if (error) {
@@ -121,6 +127,21 @@ export default () => {
                     handleDelete={handleDelete}
                 >
                     <h4>Firmen</h4>
+                    <div className="pagination-size">
+                        <label htmlFor="pagination-size">Anzahl Elemente pro Seite:&nbsp;</label>
+                        <select 
+                            name="pagination-size"
+                            value={elementsPerPage.toString()}
+                            onChange={(event) => {
+                                setCurrentPage(0);
+                                setElementsPerPage(+event.target.value);
+                            }}
+                        >
+                            <option value={10}>10</option>
+                            <option value={50}>50</option>
+                            <option value={100}>100</option>
+                        </select>
+                    </div>
                     <List component="nav">
                         {companies.sort((a, b) => a.name.localeCompare(b.name)).map((company: Company) => (
                             <ListItemButton 
@@ -132,6 +153,17 @@ export default () => {
                             </ListItemButton>  
                         ))}
                     </List>
+                    {pageCount > 1 && (<Pagination
+                        previousLabel={"<"}
+                        nextLabel={">"}
+                        breakLabel={"..."}
+                        pageCount={pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={3}
+                        onPageChange={(data) => setCurrentPage(data.selected)}
+                        containerClassName={"pagination"}
+                        activeClassName={"active"}
+                    />)}
                 </Crud>
             </div>        
             <div className="rightPane">

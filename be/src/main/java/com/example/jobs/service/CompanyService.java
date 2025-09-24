@@ -2,6 +2,9 @@ package com.example.jobs.service;
 
 import com.example.jobs.db.entities.Company;
 import com.example.jobs.db.repositories.CompanyRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +20,13 @@ public class CompanyService {
         this.repo = repo;
     }
 
+    public Page<Company> findAllByPaginationSortedByName(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
+        return this.repo.findAll(pageable);
+    }
+
     public List<Company> findAll() {
-        return this.repo.findAll(Sort.by("id"));
+        return this.repo.findAll();
     }
 
     public Optional<Company> findById(Long id) {
