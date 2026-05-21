@@ -7,9 +7,9 @@ export const getInterviews = (jobId: number): Promise<Interview[]> => {
             if (!response.ok) {
                 throw new Error(await errorMessage(response));
             }
-            return response.json().then((json: any[]) => json.map((i) => ({
-                ...i,
-                date: new Date(i.date),
+            return response.json().then((json: any[]) => json.map((interview) => ({
+                ...interview,
+                date: new Date(interview.date),
             })));
         });
 }
@@ -27,9 +27,9 @@ export const changeInterview = (interview: Interview): Promise<Interview> => {
             if (!response.ok) {
                 throw new Error(await errorMessage(response));
             }
-            return response.json().then((json) => ({
-                ...json,
-                date: new Date(json.date),
+            return response.json().then((interview) => ({
+                ...interview,
+                date: new Date(interview.date),
             }));
         });
 }
@@ -47,9 +47,9 @@ export const insertInterview = (interview: Interview): Promise<Interview> => {
             if (!response.ok) {
                 throw new Error(await errorMessage(response));
             }
-            return response.json().then((json) => ({
-                ...json,
-                date: new Date(json.date),
+            return response.json().then((interview) => ({
+                ...interview,
+                date: new Date(interview.date),
             }));
         });
 }

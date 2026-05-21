@@ -10,14 +10,10 @@ export default ({
     clickHandlerInsert: () => void,
     clickHandlerChange: () => void,
     clickHandlerDelete: () => void,
-}) => {
-    return (
-        <>
-            <div className="apiButtons">
-                <Button onClick={clickHandlerInsert}>Neu</Button>
-                <Button onClick={clickHandlerChange} disabled={!canModify}>Ändern</Button>
-                <Button onClick={clickHandlerDelete} disabled={!canModify}>Löschen</Button>
-            </div>
-        </>
-    )
-}
+}) => (
+    <div className="apiButtons">
+        <Button onClick={clickHandlerInsert}>Neu</Button>
+        <Button onClick={clickHandlerChange} disabled={!canModify}>Ändern</Button>
+        <Button onClick={clickHandlerDelete} disabled={!canModify}>Löschen</Button>
+    </div>
+)

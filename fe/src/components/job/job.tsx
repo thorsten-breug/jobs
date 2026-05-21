@@ -48,7 +48,7 @@ export default ({ company }: { company: Company }) => {
         })
     }, [company])
 
-    const getSelectedItem = () => jobs.find((job: Job) => job.id === selection)
+    const getSelectedItem = () => selection > 0 ? jobs.find((job: Job) => job.id === selection) : undefined;
     const handleModify = (mode: ModifyMode, form: any) => {
         const job = { ...(mode === ModifyMode.change ? getSelectedItem() : { company_id: company.id }), ...form, closed: form.closed === 'on' };
         const promise: (job: Job) => Promise<Job> = (mode === ModifyMode.change) ? changeJob : insertJob;
@@ -76,8 +76,8 @@ export default ({ company }: { company: Company }) => {
     return (
         <>
             <div className="jobs">
-                <Crud
-                    selection={selection}
+                <Crud<Job>
+                    selection={getSelectedItem}
                     modify={(mode: ModifyMode) => {
                         const job = mode === ModifyMode.change ? getSelectedItem()! : {
                             id: 0,

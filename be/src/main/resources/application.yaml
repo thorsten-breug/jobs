@@ -11,8 +11,20 @@ spring:
       continue-on-error: true
 
 server:
-  port: 8080
+  port: {PORT:8080}
   error:
     include-stacktrace: always
     whitelabel:
       enabled: false
+
+springdoc:
+  api-docs:
+    enabled: true
+    swagger-ui:
+      info:
+        title: Jobs
+        description: Jobs REST API
+        version: 1.0.0
+        license:
+          name: Apache 2.0
+          url: http://www.apache.org/licenses/LICENSE-2.0.html

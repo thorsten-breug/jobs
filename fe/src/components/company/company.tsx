@@ -61,7 +61,7 @@ export default () => {
     const [currentPage, setCurrentPage] = useState(0); // Current page
     const [elementsPerPage, setElementsPerPage] = useState(50);
 
-    const getSelectedItem = () => companies.find(item => item.id === selection);
+    const getSelectedItem = () => selection > 0 ? companies.find(item => item.id === selection) : undefined;
     const handleModify = (mode: ModifyMode, form: any): Promise<boolean> => {
         const company = { ...(mode === ModifyMode.change ? getSelectedItem() : {}), ...form };
         const promise: (company: Company) => (dispatch: (action: any) => void, getState: () => AppState) => Promise<Company | void> 
@@ -103,8 +103,8 @@ export default () => {
     return (
         <>
             <div className="companies">
-                <Crud
-                    selection={selection}
+                <Crud<Company>
+                    selection={getSelectedItem}
                     modify={(mode: ModifyMode) => {
                         const company = mode === ModifyMode.change ? getSelectedItem()! : {
                             id: 0,

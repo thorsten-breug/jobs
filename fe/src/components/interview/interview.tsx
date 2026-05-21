@@ -48,7 +48,7 @@ export default ({ job }: { job: Job }) => {
         ))
     }, [job])
 
-    const getSelectedItem = () => interviews.find((interview) => interview.id === selection)
+    const getSelectedItem = () => selection > 0 ? interviews.find((interview) => interview.id === selection) : undefined;
     const handleModify = (mode: ModifyMode, form: any) => {
         const date = form.date ? new Date(form.date) : new Date();
         const interview = { ...(mode === ModifyMode.change ? getSelectedItem() : { job_id: job.id }), ...form, date };
@@ -77,8 +77,8 @@ export default ({ job }: { job: Job }) => {
     return (
         <>
             <div className="interviews">
-                <Crud
-                    selection={selection}
+                <Crud<Interview>
+                    selection={getSelectedItem}
                     modify={(mode: ModifyMode) => {
                         const interview = mode === ModifyMode.change ? getSelectedItem()! : {
                             id: 0,
@@ -93,7 +93,7 @@ export default ({ job }: { job: Job }) => {
                         };
                     }}
                     confirmation={() => ({
-                        title: "Job löschen",
+                        title: "Interview löschen",
                         prompt: `Sicher, dass '${new Date(getSelectedItem()!.date).toLocaleTimeString('de-DE')}' gelöscht werden soll?`,
                     })}
                     handleModify={handleModify}
