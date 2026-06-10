@@ -4,7 +4,7 @@ import { AppContext, useDispatch, type AppState } from "../../store/context"
 import type { Company } from "../../types/company"
 import Job from '../job/job'
 import Crud, { ModifyMode } from '../crud'
-import { AppAction, getCompanies } from "../../store/action"
+import { getCompanies } from "../../store/action"
 import { List, ListItemButton, ListItemText, TextField } from "@mui/material"
 import { changeCompany, insertCompany, deleteCompany } from '../../store/action'
 import './company.css'
@@ -55,12 +55,12 @@ const dialog = (company: Company) => (
 export default () => {
 
     const dispatch = useDispatch();
-    const {state: {companies, error}, dispatch: disp} = useContext(AppContext)
+    const { state: {companies} } = useContext(AppContext)
     const [selection, setSelection] = useState(-1)
     const [pageCount, setPageCount] = useState(0); // Total number of pages
     const [currentPage, setCurrentPage] = useState(0); // Current page
     const [elementsPerPage, setElementsPerPage] = useState(50);
-
+    
     const getSelectedItem = () => selection > 0 ? companies.find(item => item.id === selection) : undefined;
     const handleModify = (mode: ModifyMode, form: any): Promise<boolean> => {
         const company = { ...(mode === ModifyMode.change ? getSelectedItem() : {}), ...form };
@@ -88,17 +88,6 @@ export default () => {
             setPageCount(Math.ceil(count / elementsPerPage));
         });
     }, [elementsPerPage, currentPage]);
-
-    useEffect(() => {
-        if (error) {
-            // clear error in store
-            disp({
-                type: AppAction.ERROR,
-                error: null,
-            })
-            alert(error);
-        }
-    }, [error])
 
     return (
         <>

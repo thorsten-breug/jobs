@@ -1,8 +1,12 @@
 import type { Job } from "../types/job"
 import { errorMessage } from './error'
+import authorization from './authorization'
 
 export const getJobs = (companyId: number): Promise<Job[]> => {
-    return fetch(`${import.meta.env.VITE_API_URL}/job?company=${companyId}`)
+    const authorizationHeaders = authorization();
+    return fetch(`${import.meta.env.VITE_API_URL}/job?company=${companyId}`, {
+        headers: authorizationHeaders
+    })
         .then(async response => {
             if (!response.ok) {
                 throw new Error(await errorMessage(response));
@@ -12,11 +16,13 @@ export const getJobs = (companyId: number): Promise<Job[]> => {
 }
 
 export const changeJob = (job: Job): Promise<Job> => {
+    const authorizationHeaders = authorization();
     return fetch(`${import.meta.env.VITE_API_URL}/job/${job.id}`, {
         method: 'PUT',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            ...authorizationHeaders
         },
         body: JSON.stringify(job),
     })
@@ -29,11 +35,13 @@ export const changeJob = (job: Job): Promise<Job> => {
 }
 
 export const insertJob = (job: Job): Promise<Job> => {
+    const authorizationHeaders = authorization();
     return fetch(`${import.meta.env.VITE_API_URL}/job`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            ...authorizationHeaders
         },
         body: JSON.stringify(job),
     })
@@ -46,8 +54,10 @@ export const insertJob = (job: Job): Promise<Job> => {
 }
 
 export const deleteJob = (job: Job): Promise<boolean> => {
+    const authorizationHeaders = authorization();
     return fetch(`${import.meta.env.VITE_API_URL}/job/${job.id}`, {
         method: 'DELETE',
+        headers: authorizationHeaders
     })
         .then(async response => {
             if (!response.ok) {

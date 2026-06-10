@@ -4,6 +4,7 @@ import com.example.jobs.db.entities.Company;
 import com.example.jobs.service.CompanyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Min;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/company")
+@SecurityRequirement(name = "Keycloak")
 @Tag(name = "Company Controller", description = "Gets and modifies Company records")
 public class CompanyController {
 

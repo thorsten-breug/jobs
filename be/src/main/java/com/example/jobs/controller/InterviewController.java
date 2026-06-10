@@ -4,6 +4,7 @@ import com.example.jobs.db.entities.Interview;
 import com.example.jobs.service.InterviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/interview")
+@SecurityRequirement(name = "Keycloak")
 @Tag(name = "Interview Controller", description = "Gets and modifies Interview records")
 public class InterviewController {
 
