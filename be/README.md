@@ -11,11 +11,6 @@ The following Environment Variables are required in order to connect to the Data
 
 ## Local Setup
 
-The Application needs a Database Server that can be obtained from [Docker Hub](https://hub.docker.com/_/postgres).
-
-- Start the Postgres Server. In case a docker image is used run the container with `docker run -itd -e POSTGRES_USER=... -e POSTGRES_PASSWORD=... --net host -v ./data:/var/lib/postgresql/data postgres:16.9
-` after replacing `...` with Your credentials (see [Docker Hub](https://hub.docker.com/_/postgres) for more information).
-
 - Run `mvn spring-boot:run -Dspring-boot.run.profiles=develop` after exporting the Environment Variables. Profile `dev` returns CORS Headers suitable for running on your local machine (see Bean `corsConfigurer()` in Class [JobsApplication](./src/main/java/com/example/jobs/JobsApplication.java)).
 
 ### Swagger (OpenAPI 3.0)

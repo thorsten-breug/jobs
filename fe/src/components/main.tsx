@@ -2,6 +2,7 @@ import { useEffect, useContext } from 'react'
 import { AppContext } from "../store/context"
 import { AppAction } from "../store/action"
 import { useKeycloak } from "@react-keycloak/web";
+import Login from './login'
 import Companies from './company/company'
 
 export default () => {
@@ -15,15 +16,11 @@ export default () => {
               type: AppAction.ERROR,
               error: null,
           })
-          // alert(error);
+          alert(error);
       }
   }, [error])
-  useEffect(() => {
-    if (isLoggedIn === false)
-      keycloak?.login();
-  }, [isLoggedIn, keycloak]);
   if (!isLoggedIn) 
-    return <div>Loading...</div>;
+    return <Login />;
   
   return (
     <div className="card">

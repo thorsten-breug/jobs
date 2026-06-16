@@ -1,4 +1,3 @@
-import React from 'react'
 import AppContextProvider from './store/context'
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import keycloakClient from "./keycloak";
@@ -8,18 +7,16 @@ import './App.css'
 function App() {
 
   return (
-    <React.StrictMode>
+    <AppContextProvider>
       <ReactKeycloakProvider
         authClient={keycloakClient}
         initOptions={{
           onLoad: 'check-sso', // "login-required", 
         }}
-      >
-        <AppContextProvider>
-          <Main />
-        </AppContextProvider>
+    >
+        <Main />
       </ReactKeycloakProvider>
-    </React.StrictMode>
+    </AppContextProvider>
   )
 }
 
