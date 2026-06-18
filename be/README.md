@@ -11,7 +11,7 @@ The following Environment Variables are required in order to connect to the Data
 
 ## Local Setup
 
-- Run `mvn spring-boot:run -Dspring-boot.run.profiles=develop` after exporting the Environment Variables. Profile `dev` returns CORS Headers suitable for running on your local machine (see Bean `corsConfigurer()` in Class [JobsApplication](./src/main/java/com/example/jobs/JobsApplication.java)).
+- Run `mvn spring-boot:run -Dspring-boot.run.profiles=develop` after exporting the Environment Variables. Profile `develop` returns CORS Headers suitable for running on your local machine.
 
 ### Swagger (OpenAPI 3.0)
 
