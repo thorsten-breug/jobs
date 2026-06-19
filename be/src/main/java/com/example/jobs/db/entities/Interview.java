@@ -26,11 +26,9 @@ public class Interview {
 
     protected Timestamp date;
 
-    @Schema(defaultValue = "0")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     protected Long job_id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "job_id", updatable = false, insertable = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     protected Job job;

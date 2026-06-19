@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,27 +52,25 @@ public class InterviewController {
 
     @PostMapping()
     @Operation(summary = "Insert new Interview")
-    public ResponseEntity insertInterview(@RequestBody Interview interview, HttpServletResponse response) throws IOException {
+    public Interview insertInterview(@RequestBody Interview interview) throws BadRequestException {
         if (interview.getId() != null) {
-            return new ResponseEntity("Interview ID must not be set.", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("Interview ID must not be set.");
         }
         if (Optional.ofNullable(interview.getJob_id()).orElse(0L) <= 0L) {
-            return new ResponseEntity("Job ID must be set.", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("Job ID must be set.");
         }
-        interview = this.service.update(interview);
-        response.sendRedirect(String.format("/interview/%d", interview.getId()));
-        return new ResponseEntity(interview, HttpStatus.OK);
+        return this.service.update(interview);
     }
 
     @DeleteMapping("{id}")
     @Operation(summary = "Delete Interview")
-    public ResponseEntity deleteInterview(@Parameter(description = "Interview ID") @PathVariable Long id) {
+    public ResponseEntity<?> deleteInterview(@Parameter(description = "Interview ID") @PathVariable Long id) {
         Optional<Interview> interview = this.service.findById(id);
         if (interview.isEmpty()) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             this.service.delete(interview.get());
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 
