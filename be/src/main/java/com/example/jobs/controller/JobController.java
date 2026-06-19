@@ -5,15 +5,14 @@ import com.example.jobs.service.JobService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
+import org.apache.coyote.BadRequestException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,27 +52,25 @@ public class JobController {
 
     @PostMapping()
     @Operation(summary = "Insert new Job")
-    public ResponseEntity insertJob(@RequestBody Job job, HttpServletResponse response) throws IOException {
+    public Job insertJob(@RequestBody Job job) throws BadRequestException {
         if (job.getId() != null) {
-            return new ResponseEntity("Job ID must not be set.", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("Job ID must not be set.");
         }
         if (Optional.ofNullable(job.getCompany_id()).orElse(0L) <= 0L) {
-            return new ResponseEntity("Company ID must be set.", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("Company ID must be set.");
         }
-        job = this.service.update(job);
-        response.sendRedirect(String.format("/job/%d", job.getId()));
-        return new ResponseEntity(job, HttpStatus.OK);
+        return this.service.update(job);
     }
 
     @DeleteMapping("{id}")
     @Operation(summary = "Delete Job")
-    public ResponseEntity deleteJob(@Parameter(description = "Job ID") @PathVariable Long id) {
+    public ResponseEntity<?> deleteJob(@Parameter(description = "Job ID") @PathVariable Long id) {
         Optional<Job> job = this.service.findById(id);
         if (job.isEmpty()) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             this.service.delete(job.get());
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 

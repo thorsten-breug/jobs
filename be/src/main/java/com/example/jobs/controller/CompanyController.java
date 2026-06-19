@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import org.apache.coyote.BadRequestException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,24 +58,22 @@ public class CompanyController {
 
     @PostMapping()
     @Operation(summary = "Insert new Company")
-    public ResponseEntity insertCompany(@RequestBody Company company, HttpServletResponse response) throws IOException {
+    public Company insertCompany(@RequestBody Company company) throws BadRequestException {
         if (company.getId() != null) {
-            return new ResponseEntity("Company ID must not be set.", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("Company ID must not be set.");
         }
-        company = this.service.update(company);
-        response.sendRedirect(String.format("/company/%d", company.getId()));
-        return new ResponseEntity(company, HttpStatus.OK);
+        return this.service.update(company);
     }
 
     @DeleteMapping("{id}")
     @Operation(summary = "Delete Company")
-    public ResponseEntity deleteCompany(@Parameter(description = "Company ID") @PathVariable Long id) {
+    public ResponseEntity<?> deleteCompany(@Parameter(description = "Company ID") @PathVariable Long id) {
         Optional<Company> company = this.service.findById(id);
         if (company.isEmpty()) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             this.service.delete(company.get());
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 

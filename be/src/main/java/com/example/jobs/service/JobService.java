@@ -6,6 +6,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -26,14 +27,10 @@ public class JobService {
     public List<Job> findAll(Optional<Long> companyId, Optional<Boolean> closed) {
         return this.repo.findAll(new Specification<Job>() {
             @Override
-            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder criteriaBuilder) {
+            public Predicate toPredicate(@NonNull Root root, CriteriaQuery query, @NonNull CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
-                if (companyId.isPresent()) {
-                    predicates.add(criteriaBuilder.equal(root.get("company_id"), companyId.get()));
-                }
-                if (closed.isPresent()) {
-                    predicates.add(criteriaBuilder.equal(root.get("closed"), closed.get()));
-                }
+                companyId.ifPresent(aLong -> predicates.add(criteriaBuilder.equal(root.get("company_id"), aLong)));
+                closed.ifPresent(aBoolean -> predicates.add(criteriaBuilder.equal(root.get("closed"), aBoolean)));
                 return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
             }
         }, Sort.by("id"));
